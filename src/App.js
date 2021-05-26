@@ -1,23 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect,
+} from "react-router-dom";
+import Navbar from "./Components/Navbar";
+import Home from "./Pages/Home";
+import Login from "./Pages/Login";
+import Search from "./Pages/Search";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app">
+      <Router>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={() => {
+              return window.localStorage.getItem("token") ? (
+                <Redirect to="/home" />
+              ) : (
+                <Redirect to="/login" />
+              );
+            }}
+          />
+          <Route exaxt path="/login" component={Login}></Route>
+          <>
+            <Navbar />
+
+            <Route
+              exact
+              path="/home"
+              component={() => (
+                <Home authorized={window.localStorage.getItem("token")} />
+              )}
+            ></Route>
+            <Route
+              exact
+              path="/search"
+              component={() => (
+                <Search authorized={window.localStorage.getItem("token")} />
+              )}
+            ></Route>
+          </>
+        </Switch>
+      </Router>
     </div>
   );
 }
